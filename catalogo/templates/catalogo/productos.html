@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+  <h2>Productos</h2>
+  <div class="grid">
+    {% for p in productos %}
+      <article class="card">
+        {% if p.imagen %}
+          <img src="{% static p.imagen %}" alt="{{ p.nombre }}">
+        {% endif %}
+        <h3>{{ p.nombre }}</h3>
+        <p class="price">${{ p.precio }}</p>
+
+        {% if carrito_id %}
+          <a class="btn" href="{% url 'agregar' carrito_id=carrito_id producto_id=p.id %}">Agregar al carrito</a>
+        {% else %}
+          <a class="btn" href="{% url 'nuevo_carrito' %}?next={% url 'productos' %}">Crear carrito</a>
+        {% endif %}
+      </article>
+    {% empty %}
+      <p class="empty">No hay productos.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

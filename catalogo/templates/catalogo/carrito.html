@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+
+  <h2>Carrito #{{ carrito.id }}</h2>
+  {% if carrito.items.all %}
+  <table>
+    <tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Subtotal</th><th></th></tr>
+    {% for it in carrito.items.all %}
+      <tr>
+        <td>{{ it.producto.nombre }}</td>
+        <td>{{ it.cantidad }}</td>
+        <td>${{ it.producto.precio }}</td>
+        <td>${{ it.subtotal }}</td>
+        <td>
+          <a href="{% url 'quitar' carrito_id=carrito.id item_id=it.id %}">Quitar</a>
+        </td>
+      </tr>
+    {% endfor %}
+    <tr><td colspan="3" style="text-align:right"><strong>Total</strong></td><td>${{ carrito.total }}</td><td></td></tr>
+  </table>
+  {% else %}
+    <p>Tu carrito está vacío.</p>
+  {% endif %}
+
+  <p><a href="{% url 'productos' %}">Seguir comprando</a></p>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tienda</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
+        <nav>
+          <a href="{% url 'index' %}">Inicio</a>
+          <a href="{% url 'productos' %}">Productos</a>
+          <a href="{% url 'nuevo_carrito' %}">Carrito Nuevo</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <main>
+        {% block contenido %}{% endblock %}
+      </main>
+    </div>
+  </body>
+</html>
