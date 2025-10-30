@@ -1,28 +1,65 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
+{% load math_extras %} {# si tienes el filtro mul, si no, bórralo #}
+
+{% block title %}Mi carrito{% endblock %}
 
 {% block contenido %}
+  <h2>Mi carrito</h2>
 
-  <h2>Carrito #{{ carrito.id }}</h2>
-  {% if carrito.items.all %}
-  <table>
-    <tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Subtotal</th><th></th></tr>
-    {% for it in carrito.items.all %}
-      <tr>
-        <td>{{ it.producto.nombre }}</td>
-        <td>{{ it.cantidad }}</td>
-        <td>${{ it.producto.precio }}</td>
-        <td>${{ it.subtotal }}</td>
-        <td>
-          <a href="{% url 'quitar' carrito_id=carrito.id item_id=it.id %}">Quitar</a>
-        </td>
-      </tr>
-    {% endfor %}
-    <tr><td colspan="3" style="text-align:right"><strong>Total</strong></td><td>${{ carrito.total }}</td><td></td></tr>
-  </table>
-  {% else %}
+  {% if not carrito.items.all %}
     <p>Tu carrito está vacío.</p>
-  {% endif %}
+    <p><a class="btn" href="{% url 'productos' %}">Ir a Productos</a></p>
+  {% else %}
+    <div class="carrito-acciones-top">
+      <a class="btn btn-outline" href="{% url 'productos' %}">Seguir comprando</a>
+      <a class="btn btn-danger" href="{% url 'vaciar_carrito' %}">Vaciar carrito</a>
+    </div>
 
-  <p><a href="{% url 'productos' %}">Seguir comprando</a></p>
+    <table class="tabla-carrito">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cant.</th>
+          <th>Precio</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for it in carrito.items.all %}
+          <tr>
+            <td>
+              {{ it.producto.nombre }}
+            </td>
+            <td>
+              <form method="post" action="{% url 'cambiar_cantidad' it.id %}">
+                {% csrf_token %}
+                <input type="number" name="cantidad" value="{{ it.cantidad }}" min="0">
+                <button class="btn btn-outline btn-sm" type="submit">Actualizar</button>
+              </form>
+            </td>
+            <td>${{ it.producto.precio }}</td>
+            <td>
+              {% if it.producto.precio and it.cantidad %}
+                ${{ it.producto.precio|mul:it.cantidad }}
+              {% else %}
+                $0
+              {% endif %}
+            </td>
+            <td>
+              <a class="btn btn-danger btn-sm" href="{% url 'quitar' it.id %}">Quitar</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align:right;"><strong>Total</strong></td>
+          <td>${{ totals.total }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  {% endif %}
 {% endblock %}

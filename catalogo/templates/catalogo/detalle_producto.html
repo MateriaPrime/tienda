@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ producto.nombre }} - Tienda{% endblock %}
+
+{% block contenido %}
+  <article class="producto-detalle" style="display:grid;grid-template-columns:260px 1fr;gap:1rem;align-items:start;">
+    <div class="detalle-media">
+      {% if producto.imagen %}
+        {# Si es ImageField: #}
+        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width:100%;height:auto;object-fit:cover;background:#f5f5f5;border-radius:.5rem;">
+        {# Si es ruta en static: <img src="{% static producto.imagen %}" ...> #}
+      {% else %}
+        <img src="{% static 'images/placeholder.png' %}" alt="Sin imagen" style="width:100%;height:auto;object-fit:cover;background:#f5f5f5;border-radius:.5rem;">
+      {% endif %}
+    </div>
+
+    <div class="detalle-body">
+      <h1 style="margin:.25rem 0 0.5rem;">{{ producto.nombre }}</h1>
+
+      <div class="precio" style="font-size:1.25rem;font-weight:700;margin:.25rem 0 1rem;">
+        ${{ producto.precio }}
+      </div>
+
+      {% if producto.descripcion %}
+        <p style="line-height:1.5;margin-bottom:1rem;">{{ producto.descripcion }}</p>
+      {% endif %}
+
+      <div class="acciones" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;">
+        {% if carrito_id %}
+          <a class="btn btn-primary" href="{% url 'agregar' carrito_id=carrito_id producto_id=producto.id %}">
+            Agregar al carrito
+          </a>
+          <a class="btn btn-outline" href="{% url 'ver_carrito' carrito_id %}">
+            Ver carrito
+          </a>
+        {% else %}
+          {# crea carrito y vuelve a este detalle #}
+          <a class="btn btn-primary" href="{% url 'nuevo_carrito' %}?next={% url 'detalle_producto' producto.id %}">
+            Crear carrito y agregar
+          </a>
+        {% endif %}
+        <a class="btn btn-outline" href="{% url 'productos' %}">Volver a productos</a>
+      </div>
+    </div>
+  </article>
+{% endblock %}

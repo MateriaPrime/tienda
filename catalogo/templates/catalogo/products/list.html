@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Administrar productos{% endblock %}
+
+{% block contenido %}
+  <h2>Administrar productos</h2>
+
+  <div class="actions-top" style="margin-bottom:1rem;">
+    <a class="btn" href="{% url 'product_create' %}">Nuevo producto</a>
+  </div>
+
+  {% if products %}
+    <table class="tabla-admin" style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">ID</th>
+          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Nombre</th>
+          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Precio</th>
+          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+          <tr>
+            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">{{ p.id }}</td>
+            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">{{ p.nombre }}</td>
+            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">
+              ${{ p.precio }}
+            </td>
+            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;white-space:nowrap;">
+              <a class="btn btn-outline btn-sm" href="{% url 'product_update' p.id %}">Editar</a>
+              <a class="btn btn-danger btn-sm" href="{% url 'product_delete' p.id %}">Eliminar</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay productos registrados.</p>
+  {% endif %}
+{% endblock %}

@@ -1,27 +1,58 @@
 {% load static %}
 <!doctype html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8">
-    <title>Tienda</title>
+    <title>{% block title %}Tienda{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    {% block extra_head %}{% endblock %}
   </head>
   <body>
     <header>
       <div class="header-inner">
-        <img src="{% static 'images/logo.png' %}" alt="Logo">
-        <nav>
+        <a href="{% url 'index' %}" class="brand">
+          <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </a>
+
+        <nav class="main-nav">
           <a href="{% url 'index' %}">Inicio</a>
           <a href="{% url 'productos' %}">Productos</a>
-          <a href="{% url 'nuevo_carrito' %}">Carrito Nuevo</a>
+
+          {# Carrito: si hay carrito en sesión, muestra enlace directo; si no, opción para crear uno #}
+        {% if request.session.carrito_id %}
+          <a href="{% url 'ver_carrito' %}">Mi Carrito</a>
+        {% else %}
+          <a href="{% url 'nuevo_carrito' %}?next={% url 'productos' %}">Carrito Nuevo</a>
+        {% endif %}
+        </nav>
+
+        <nav class="auth-nav">
+          {% if user.is_authenticated %}
+            <span class="saludo">Hola, {{ user.username }}</span>
+            <a href="{% url 'logout' %}">Salir</a>
+          {% else %}
+            <a href="{% url 'login' %}">Ingresar</a>
+            <a href="{% url 'signup' %}">Registrarse</a>
+          {% endif %}
         </nav>
       </div>
     </header>
 
     <div class="container">
+      {# Mensajes flash de Django (success, info, warning, error) #}
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
       <main>
         {% block contenido %}{% endblock %}
       </main>
     </div>
+
+    {% block extra_scripts %}{% endblock %}
   </body>
 </html>

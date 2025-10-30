@@ -1,5 +1,7 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
+
+{% block title %}Productos{% endblock %}
 
 {% block contenido %}
   <h2>Productos</h2>
@@ -8,15 +10,20 @@
       <article class="card">
         {% if p.imagen %}
           <img src="{% static p.imagen %}" alt="{{ p.nombre }}">
+        {% else %}
+          <img src="{% static 'images/placeholder.png' %}" alt="Sin imagen">
         {% endif %}
         <h3>{{ p.nombre }}</h3>
         <p class="price">${{ p.precio }}</p>
 
-        {% if carrito_id %}
-          <a class="btn" href="{% url 'agregar' carrito_id=carrito_id producto_id=p.id %}">Agregar al carrito</a>
-        {% else %}
-          <a class="btn" href="{% url 'nuevo_carrito' %}?next={% url 'productos' %}">Crear carrito</a>
-        {% endif %}
+        <div class="card-actions">
+          {% if carrito_existe %}
+            <a class="btn" href="{% url 'agregar' p.id %}">Agregar al carrito</a>
+            <a class="btn btn-outline" href="{% url 'ver_carrito' %}">Ver carrito</a>
+          {% else %}
+            <a class="btn" href="{% url 'nuevo_carrito' %}?next={% url 'productos' %}">Crear carrito</a>
+          {% endif %}
+        </div>
       </article>
     {% empty %}
       <p class="empty">No hay productos.</p>

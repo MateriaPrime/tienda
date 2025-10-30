@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Ingresar - Tienda{% endblock %}
+
+{% block contenido %}
+  <h2>Ingresar</h2>
+
+  <form method="post" class="form-auth">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-row">
+      {{ form.username.label_tag }}
+      {{ form.username }}
+    </div>
+    <div class="form-row">
+      {{ form.password.label_tag }}
+      {{ form.password }}
+    </div>
+    <button type="submit" class="btn">Entrar</button>
+  </form>
+
+  <p>¿No tienes cuenta? <a href="{% url 'signup' %}">Regístrate</a></p>
+{% endblock %}
