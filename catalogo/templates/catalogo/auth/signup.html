@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Registro{% endblock %}
+{% block title %}Crear cuenta{% endblock %}
 
 {% block contenido %}
   <h2>Crear cuenta</h2>
@@ -10,19 +10,19 @@
     {{ form.non_field_errors }}
 
     <div class="form-row">
-      {{ form.username.label_tag }}
+      <label for="{{ form.username.id_for_label }}">Nombre de usuario</label>
       {{ form.username }}
       {{ form.username.errors }}
     </div>
 
     <div class="form-row">
-      {{ form.password1.label_tag }}
+      <label for="{{ form.password1.id_for_label }}">Contraseña</label>
       {{ form.password1 }}
       {{ form.password1.errors }}
     </div>
 
     <div class="form-row">
-      {{ form.password2.label_tag }}
+      <label for="{{ form.password2.id_for_label }}">Confirmar contraseña</label>
       {{ form.password2 }}
       {{ form.password2.errors }}
     </div>
