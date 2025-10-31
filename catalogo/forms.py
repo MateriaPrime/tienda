@@ -1,11 +1,15 @@
 from django import forms
-from .models import Producto  # <— ajusta si tu modelo se llama distinto
+from .models import Producto
 
-class ProductForm(forms.ModelForm):
+class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = "__all__"  # o ['name','price','stock','image',...]
+        # 👇 aquí va stock también
+        fields = ["nombre", "descripcion", "precio", "stock", "imagen"]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            "nombre": forms.TextInput(attrs={"class": "input"}),
+            "descripcion": forms.Textarea(attrs={"rows": 3, "class": "input"}),
+            "precio": forms.NumberInput(attrs={"step": "0.01", "class": "input"}),
+            "stock": forms.NumberInput(attrs={"min": 0, "class": "input"}),
+            # imagen: dejamos el widget por defecto
         }

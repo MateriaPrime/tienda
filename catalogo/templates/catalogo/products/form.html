@@ -5,26 +5,26 @@
 {% block contenido %}
   <h2>{{ title }}</h2>
 
-  <form method="post" enctype="multipart/form-data" class="form-producto">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.non_field_errors }}
 
-    {# Puedes usar form.as_p si quieres algo más rápido: #}
-    {# {{ form.as_p }} #}
-
     {% for field in form %}
-      <div class="form-row">
+      <div class="form-row" style="margin-bottom:.75rem;">
         {{ field.label_tag }}
         {{ field }}
         {% if field.errors %}
-          <div class="errorlist">
-            {{ field.errors }}
-          </div>
+          <div class="errorlist">{{ field.errors }}</div>
         {% endif %}
       </div>
     {% endfor %}
 
+    {% if form.instance.imagen %}
+      <p>Imagen actual:</p>
+      <img src="{{ form.instance.imagen.url }}" alt="" style="max-height:120px;">
+    {% endif %}
+
     <button type="submit" class="btn">Guardar</button>
-    <a class="btn btn-outline" href="{% url 'product_list' %}">Cancelar</a>
+    <a href="{% url 'product_list' %}" class="btn btn-outline">Cancelar</a>
   </form>
 {% endblock %}

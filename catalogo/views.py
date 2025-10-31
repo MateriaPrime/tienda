@@ -7,7 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 
 from .models import Producto, Carrito, ItemCarrito
-
+from django import forms
+from .forms import ProductoForm
 
 # -----------------------------
 # Helpers
@@ -105,8 +106,16 @@ def agregar(request, producto_id):
     producto = get_object_or_404(Producto, pk=producto_id)
 
     item = carrito.items.filter(producto=producto).first()
+    nueva_cant = (item.cantidad + 1) if item else 1
+
+    # validamos stock
+    if producto.stock is not None and nueva_cant > producto.stock:
+        messages.warning(request, "No hay stock suficiente para este producto.")
+        return redirect("ver_carrito")
+
+    # si pasó la validación, guardamos
     if item:
-        item.cantidad += 1
+        item.cantidad = nueva_cant
         item.save()
     else:
         ItemCarrito.objects.create(carrito=carrito, producto=producto, cantidad=1)
@@ -208,3 +217,53 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Sesión cerrada.")
     return redirect("index")
+
+
+@login_required
+def product_list(request):
+    productos = Producto.objects.all().order_by("id")
+    return render(request, "catalogo/products/list.html", {
+        "productos": productos,
+    })
+
+@login_required
+def product_create(request):
+    if request.method == "POST":
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Producto creado correctamente.")
+            return redirect("product_list")
+    else:
+        form = ProductoForm()
+    return render(request, "catalogo/products/form.html", {
+        "form": form,
+        "title": "Nuevo producto",
+    })
+
+@login_required
+def product_update(request, pk):
+    producto = get_object_or_404(Producto, pk=pk)
+    if request.method == "POST":
+        form = ProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Producto actualizado.")
+            return redirect("product_list")
+    else:
+        form = ProductoForm(instance=producto)
+    return render(request, "catalogo/products/form.html", {
+        "form": form,
+        "title": "Editar producto",
+    })
+
+@login_required
+def product_delete(request, pk):
+    producto = get_object_or_404(Producto, pk=pk)
+    if request.method == "POST":
+        producto.delete()
+        messages.info(request, "Producto eliminado.")
+        return redirect("product_list")
+    return render(request, "catalogo/products/confirm_delete.html", {
+        "producto": producto,
+    })

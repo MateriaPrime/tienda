@@ -17,6 +17,9 @@
         <nav class="main-nav">
           <a href="{% url 'index' %}">Inicio</a>
           <a href="{% url 'productos' %}">Productos</a>
+          {% if user.is_staff %}
+          <a href="{% url 'product_list' %}">Admin productos</a>
+          {% endif %}
 
           {# Carrito: si hay carrito en sesión, muestra enlace directo; si no, opción para crear uno #}
         {% if request.session.carrito_id %}

@@ -5,27 +5,27 @@
 {% block contenido %}
   <h2>Administrar productos</h2>
 
-  <div class="actions-top" style="margin-bottom:1rem;">
-    <a class="btn" href="{% url 'product_create' %}">Nuevo producto</a>
-  </div>
+  <p><a class="btn" href="{% url 'product_create' %}">➕ Nuevo producto</a></p>
 
-  {% if products %}
-    <table class="tabla-admin" style="width:100%;border-collapse:collapse;">
+  {% if productos %}
+    <table style="width:100%;border-collapse:collapse;">
       <thead>
         <tr>
-          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">ID</th>
           <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Nombre</th>
           <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Precio</th>
+          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Stock</th> 
+          <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Imagen</th>
           <th style="text-align:left;border-bottom:1px solid #eee;padding:.5rem;">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for p in products %}
+        {% for p in productos %}
           <tr>
-            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">{{ p.id }}</td>
             <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">{{ p.nombre }}</td>
+            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">${{ p.precio }}</td>
+            <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">{{ p.stock }}</td> 
             <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;">
-              ${{ p.precio }}
+              {{ p.imagen }}
             </td>
             <td style="padding:.5rem;border-bottom:1px solid #f4f4f4;white-space:nowrap;">
               <a class="btn btn-outline btn-sm" href="{% url 'product_update' p.id %}">Editar</a>
@@ -36,6 +36,6 @@
       </tbody>
     </table>
   {% else %}
-    <p>No hay productos registrados.</p>
+    <p>No hay productos.</p>
   {% endif %}
 {% endblock %}

@@ -9,7 +9,7 @@ urlpatterns = [
     path('productos/', views.productos, name='productos'),
     path('producto/<int:pk>/', views.detalle_producto, name='detalle_producto'),
 
-    # carrito (sin id en la URL)
+    # carrito
     path('carrito/', views.ver_carrito, name='ver_carrito'),
     path('carrito/nuevo/', views.nuevo_carrito, name='nuevo_carrito'),
     path('carrito/agregar/<int:producto_id>/', views.agregar, name='agregar'),
@@ -21,4 +21,10 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('signup/', views.signup_view, name='signup'),
+
+    # CRUD productos propio (no choca con /admin/)
+    path('panel/products/', views.product_list, name='product_list'),
+    path('panel/products/create/', views.product_create, name='product_create'),
+    path('panel/products/<int:pk>/update/', views.product_update, name='product_update'),
+    path('panel/products/<int:pk>/delete/', views.product_delete, name='product_delete'),
 ]

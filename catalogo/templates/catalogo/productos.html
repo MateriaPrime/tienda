@@ -9,7 +9,7 @@
     {% for p in productos %}
       <article class="card">
         {% if p.imagen %}
-          <img src="{% static p.imagen %}" alt="{{ p.nombre }}">
+          <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}">
         {% else %}
           <img src="{% static 'images/placeholder.png' %}" alt="Sin imagen">
         {% endif %}
