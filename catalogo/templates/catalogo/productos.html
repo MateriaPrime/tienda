@@ -1,29 +1,35 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Productos{% endblock %}
 
 {% block contenido %}
   <h2>Productos</h2>
   <div class="grid">
     {% for p in productos %}
       <article class="card">
-        {% if p.imagen %}
-          <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}">
-        {% else %}
-          <img src="{% static 'images/placeholder.png' %}" alt="Sin imagen">
-        {% endif %}
-        <h3>{{ p.nombre }}</h3>
+        <a href="{% url 'detalle_producto' p.id %}">
+          {% if p.imagen %}
+            {% if p.imagen.name|slice:":9" == "productos" %}
+              <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}">
+            {% else %}
+              <img src="{% static p.imagen.name %}" alt="{{ p.nombre }}">
+            {% endif %}
+          {% else %}
+            <img src="{% static 'images/no-image.png' %}" alt="Sin imagen">
+          {% endif %}
+        </a>
+
+        <h3>
+          <a href="{% url 'detalle_producto' p.id %}">{{ p.nombre }}</a>
+        </h3>
+
         <p class="price">${{ p.precio }}</p>
 
-        <div class="card-actions">
-          {% if carrito_existe %}
-            <a class="btn" href="{% url 'agregar' p.id %}">Agregar al carrito</a>
-            <a class="btn btn-outline" href="{% url 'ver_carrito' %}">Ver carrito</a>
-          {% else %}
-            <a class="btn" href="{% url 'nuevo_carrito' %}?next={% url 'productos' %}">Crear carrito</a>
-          {% endif %}
-        </div>
+        {% if request.session.carrito_id %}
+          <a class="btn" href="{% url 'agregar' producto_id=p.id %}">Agregar al carrito</a>
+          <a class="btn btn-outline" href="{% url 'ver_carrito' %}">Ver carrito</a>
+        {% else %}
+          <a class="btn" href="{% url 'nuevo_carrito' %}?next={% url 'productos' %}">Crear carrito</a>
+        {% endif %}
       </article>
     {% empty %}
       <p class="empty">No hay productos.</p>

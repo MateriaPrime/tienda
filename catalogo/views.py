@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import user_passes_test
 
 from .models import Producto, Carrito, ItemCarrito
 from django import forms
@@ -267,3 +268,6 @@ def product_delete(request, pk):
     return render(request, "catalogo/products/confirm_delete.html", {
         "producto": producto,
     })
+
+def staff_required(view):
+    return user_passes_test(lambda u: u.is_staff)(view)

@@ -1,8 +1,8 @@
 from rest_framework import viewsets, permissions
 from .models import Producto
-from .serializers import ProductSerializer
+from .serializers import ProductoSerializer
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all().order_by('id')
-    serializer_class = ProductSerializer
+class ProductoViewSet(viewsets.ModelViewSet):
+    queryset = Producto.objects.all().order_by("id")
+    serializer_class = ProductoSerializer
     permission_classes = [permissions.IsAuthenticated]
